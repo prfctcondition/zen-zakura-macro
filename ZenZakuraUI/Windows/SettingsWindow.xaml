@@ -1,0 +1,128 @@
+<Window x:Class="ZenZakuraUI.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ZenZakuraUI.ViewModels"
+        xmlns:conv="clr-namespace:ZenZakuraUI.Converters"
+        mc:Ignorable="d"
+        Title="Settings"
+        Width="400" Height="360"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        d:DataContext="{d:DesignInstance vm:SettingsViewModel}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <conv:BoolToPauseStateConverter x:Key="BoolToPauseStateConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border CornerRadius="10" Background="White" BorderBrush="#F0E0E2" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.15" Color="#F2B4BC" />
+        </Border.Effect>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Settings"
+                       FontFamily="Lexend Tera"
+                       FontSize="16"
+                       FontWeight="Light"
+                       Foreground="#F2B4BC"
+                       VerticalAlignment="Center" />
+
+            <!-- Pause Toggle section -->
+            <StackPanel Grid.Row="1" Margin="0,6,0,0">
+                <TextBlock Text="global pause toggle key"
+                           FontFamily="Lexend Tera"
+                           FontSize="11"
+                           FontWeight="Light"
+                           Foreground="#F2B4BC"
+                           Margin="0,0,0,6" />
+
+                <StackPanel Orientation="Horizontal">
+                    <Border CornerRadius="6"
+                            Background="#FFF5F5"
+                            BorderBrush="#F0E0E2"
+                            BorderThickness="1"
+                            Height="34" Width="80"
+                            Margin="0,0,8,0">
+                        <TextBlock Text="{Binding PauseKeyDisplay}"
+                                   FontFamily="Lexend Tera"
+                                   FontSize="13"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="#1A1A1A" />
+                    </Border>
+                    <Button Content="bind"
+                            Style="{StaticResource PinkButton}"
+                            FontSize="11" Height="30"
+                            Margin="0,0,4,0"
+                            Command="{Binding BindPauseKeyCommand}" />
+                    <Button Content="clear"
+                            Style="{StaticResource PinkButton}"
+                            FontSize="11" Height="30"
+                            Command="{Binding ClearPauseKeyCommand}" />
+                </StackPanel>
+
+                <TextBlock Text="{Binding IsPaused, Converter={StaticResource BoolToPauseStateConverter}}"
+                           FontFamily="Lexend Tera"
+                           FontSize="10"
+                           FontWeight="Light"
+                           Foreground="#666666"
+                           Margin="0,4,0,0" />
+            </StackPanel>
+
+            <Separator Grid.Row="2" Margin="0,14" Opacity="0.3" />
+
+            <!-- Process filter section -->
+            <StackPanel Grid.Row="3" Margin="0,0,0,0">
+                <CheckBox IsChecked="{Binding ProcessFilterEnabled}"
+                          FontFamily="Lexend Tera"
+                          FontSize="11"
+                          FontWeight="Light"
+                          Foreground="#1A1A1A"
+                          Margin="0,0,0,6">
+                    Only when process is focused (#IfWinActive)
+                </CheckBox>
+
+                <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                    <ComboBox ItemsSource="{Binding RunningProcesses}"
+                              Text="{Binding ProcessName, UpdateSourceTrigger=PropertyChanged}"
+                              Width="200"
+                              Height="28"
+                              FontFamily="Lexend Tera"
+                              FontSize="11"
+                              IsEditable="True" />
+                    <Button Content="↻"
+                            Style="{StaticResource PinkButton}"
+                            FontSize="11" Height="28"
+                            Margin="6,0,0,0"
+                            Padding="6,2"
+                            Command="{Binding RefreshProcessesCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <Button Content="OK"
+                        Style="{StaticResource PinkButton}"
+                        Padding="20,6"
+                        Command="{Binding ApplyCommand}" />
+                <Button Content="Cancel"
+                        Style="{StaticResource PinkButton}"
+                        Padding="20,6"
+                        Margin="8,0,0,0"
+                        Click="OnCancel" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

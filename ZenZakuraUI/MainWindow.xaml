@@ -1,0 +1,532 @@
+<Window x:Class="ZenZakuraUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ZenZakuraUI.ViewModels"
+        xmlns:models="clr-namespace:ZenZakuraUI.Models"
+        xmlns:conv="clr-namespace:ZenZakuraUI.Converters"
+        mc:Ignorable="d"
+        Title="Zen Zakura Macro"
+        Width="1100" Height="680"
+        MinWidth="900" MinHeight="560"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#F0F0F0"
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}">
+    <Window.Resources>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <conv:BoolToPauseStateConverter x:Key="BoolToPauseStateConverter" />
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CornerRadius="10" GlassFrameThickness="0" UseAeroCaptionButtons="False" CaptionHeight="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border CornerRadius="10" Background="#FCFCFC"
+            x:Name="WindowRoot">
+        <Grid>
+            <!-- Sakura background overlay at full opacity -->
+            <Image Source="sakura_bg.png"
+                   Stretch="UniformToFill"
+                   Opacity="1.0"
+                   IsHitTestVisible="False" />
+
+            <Grid Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="52" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- ==================== Title Bar ==================== -->
+                <Grid Grid.Row="0" Background="Transparent" MouseDown="OnTitleBarMouseDown">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Background="#CCFFF0F2"
+                            CornerRadius="22"
+                            Padding="22,5,22,5"
+                            Margin="12,6,0,6"
+                            IsHitTestVisible="False">
+                        <TextBlock Text="zen zakura マクロ"
+                                   FontFamily="Lexend Tera"
+                                   FontSize="17"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Center"
+                                   Foreground="#F2B4BC" />
+                    </Border>
+
+                    <Button Grid.Column="2"
+                            Content="─"
+                            Style="{StaticResource PinkButton}"
+                            FontSize="22"
+                            Padding="16,0"
+                            Height="52"
+                            Width="58"
+                            WindowChrome.IsHitTestVisibleInChrome="True"
+                            Click="OnMinimizeClick" />
+                    <Button Grid.Column="3"
+                            Content="✕"
+                            Style="{StaticResource PinkButton}"
+                            FontSize="20"
+                            Padding="16,0"
+                            Height="52"
+                            Width="58"
+                            WindowChrome.IsHitTestVisibleInChrome="True"
+                            Click="OnCloseClick" />
+                </Grid>
+
+                <!-- ==================== Content ==================== -->
+                <Grid Grid.Row="1" Margin="14,0,14,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="210" />
+                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ===== Sidebar ===== -->
+                    <Border Grid.Column="0"
+                            Background="#CCFFF8F8"
+                            CornerRadius="12"
+                            Margin="0,8,8,8">
+                        <Grid Margin="14">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" VerticalAlignment="Top" Margin="0,4,0,0">
+                                <Button Content="new macro"
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="14"
+                                        Height="40"
+                                        Width="170"
+                                        Margin="0,0,0,10"
+                                        Command="{Binding NewMacroCommand}" />
+                                <Button Content="open macro"
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="14"
+                                        Height="40"
+                                        Width="170"
+                                        Margin="0,0,0,10"
+                                        Command="{Binding OpenMacroCommand}" />
+                                <Button Content="save macro"
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="14"
+                                        Height="40"
+                                        Width="170"
+                                        Margin="0,0,0,10"
+                                        Command="{Binding SaveMacroCommand}" />
+                                <Button Content="save as ..."
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="14"
+                                        Height="40"
+                                        Width="170"
+                                        Margin="0,0,0,10"
+                                        Command="{Binding SaveMacroAsCommand}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Margin="0,0,0,4">
+                                <Button Content="settings"
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="14"
+                                        Height="40"
+                                        Width="170"
+                                        Click="OnSettingsClick" />
+                                <Border Background="#CCFFF0F2"
+                                        BorderBrush="#F2B4BC"
+                                        BorderThickness="1"
+                                        CornerRadius="12"
+                                        Padding="12,6"
+                                        Margin="0,8,0,0"
+                                        Height="30">
+                                    <TextBlock FontFamily="Lexend Tera"
+                                               FontSize="10"
+                                               FontWeight="Light"
+                                               Foreground="#1A1A1A"
+                                               HorizontalAlignment="Center">
+                                        <Run Text="macros status: " />
+                                        <Run Text="{Binding IsPaused, Converter={StaticResource BoolToPauseStateConverter}}" />
+                                    </TextBlock>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- ===== Macro List ===== -->
+                    <Border Grid.Column="1"
+                            Background="#CCFFF8F8"
+                            CornerRadius="12"
+                            Margin="2,8,2,8">
+                        <Grid Margin="14">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="macros"
+                                       FontFamily="Lexend Tera"
+                                       FontSize="15"
+                                       FontWeight="Light"
+                                       Foreground="#F2B4BC"
+                                       Margin="4,4,0,8" />
+
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,10">
+                                <TextBox Text="{Binding RenameText, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource PinkTextBox}"
+                                         FontSize="13"
+                                         Height="30"
+                                         Width="110" />
+                                <Button Content="rename"
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="11" Height="30"
+                                        Margin="6,0,0,0"
+                                        Command="{Binding RenameMacroCommand}" />
+                                <Button Content="del"
+                                        Style="{StaticResource PinkButton}"
+                                        FontSize="11" Height="30"
+                                        Margin="4,0,0,0"
+                                        Command="{Binding DeleteMacroCommand}" />
+                            </StackPanel>
+
+                            <ListBox Grid.Row="2"
+                                     ItemsSource="{Binding Macros}"
+                                     SelectedItem="{Binding SelectedMacro}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MacroListItemStyle}" />
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="models:Macro">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <CheckBox Grid.Column="0"
+                                                      IsChecked="{Binding IsHotkeyEnabled}"
+                                                      Checked="OnHotkeyToggled"
+                                                      Unchecked="OnHotkeyToggled"
+                                                      Margin="0,0,8,0"
+                                                      VerticalAlignment="Center"
+                                                      ToolTip="Enable hotkey for this macro">
+                                                <CheckBox.LayoutTransform>
+                                                    <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                                                </CheckBox.LayoutTransform>
+                                            </CheckBox>
+
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Name}"
+                                                       FontFamily="Lexend Tera"
+                                                       FontSize="15"
+                                                       FontWeight="Light"
+                                                       Foreground="#1A1A1A"
+                                                       VerticalAlignment="Center" />
+
+                                            <Border Grid.Column="2"
+                                                    Background="#FFF0F2"
+                                                    CornerRadius="4"
+                                                    Padding="6,2"
+                                                    Margin="4,0,0,0"
+                                                    Visibility="{Binding BindKey, Converter={StaticResource NullToVisibilityConverter}}">
+                                                <TextBlock Text="{Binding BindKeyDisplay}"
+                                                           FontFamily="Lexend Tera"
+                                                           FontSize="10"
+                                                           Foreground="#F2B4BC"
+                                                           VerticalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+
+                    <!-- ===== Editor ===== -->
+                    <Border Grid.Column="2"
+                            Background="#CCFFF8F8"
+                            CornerRadius="12"
+                            Margin="4,8,0,8">
+                        <Grid Margin="14">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Row 0: Execution type + Bind -->
+                            <Border Grid.Row="0"
+                                    Background="#CCFFF0F2"
+                                    CornerRadius="10"
+                                    Padding="16,10"
+                                    Margin="0,0,0,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Margin="0,0,40,0">
+                                        <TextBlock Text="execution type"
+                                                   FontFamily="Lexend Tera"
+                                                   FontSize="12"
+                                                   Foreground="#F2B4BC"
+                                                   Margin="0,0,0,6" />
+                                        <RadioButton x:Name="PlayModeOnce"
+                                                     Content="single time"
+                                                     FontFamily="Lexend Tera" FontSize="14"
+                                                     Foreground="#1A1A1A"
+                                                     GroupName="PlayMode"
+                                                     Tag="Once"
+                                                     Checked="OnPlayModeChecked" />
+                                        <RadioButton x:Name="PlayModeRepeatHeld"
+                                                     Content="repeat on hold"
+                                                     FontFamily="Lexend Tera" FontSize="14"
+                                                     Foreground="#1A1A1A"
+                                                     GroupName="PlayMode"
+                                                     Tag="RepeatWhileHeld"
+                                                     Checked="OnPlayModeChecked" />
+                                        <RadioButton x:Name="PlayModeToggle"
+                                                     Content="toggle repeat"
+                                                     FontFamily="Lexend Tera" FontSize="14"
+                                                     Foreground="#1A1A1A"
+                                                     GroupName="PlayMode"
+                                                     Tag="ToggleRepeat"
+                                                     Checked="OnPlayModeChecked" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="bind to key"
+                                                   FontFamily="Lexend Tera"
+                                                   FontSize="12"
+                                                   Foreground="#F2B4BC"
+                                                   Margin="0,0,0,6" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border CornerRadius="8"
+                                                    Background="White"
+                                                    BorderBrush="#F0E0E2"
+                                                    BorderThickness="1"
+                                                    Height="38" Width="70">
+                                                <TextBlock Text="{Binding BindKeyDisplay}"
+                                                           FontFamily="Lexend Tera"
+                                                           FontSize="12"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="#1A1A1A" />
+                                            </Border>
+                                            <Button Content="bind"
+                                                    Style="{StaticResource PinkButton}"
+                                                    FontSize="12" Height="30"
+                                                    Margin="8,0,0,0"
+                                                    Command="{Binding BindMacroCommand}" />
+                                            <Button Content="unbind"
+                                                    Style="{StaticResource PinkButton}"
+                                                    FontSize="12" Height="30"
+                                                    Margin="4,0,0,0"
+                                                    Command="{Binding UnbindMacroCommand}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Row 1: Controls + Event list -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Controls sidebar -->
+                                <Border Grid.Column="0"
+                                        Background="#CCFFF0F2"
+                                        CornerRadius="10"
+                                        Padding="10,10">
+                                    <StackPanel>
+                                        <Button Content="record"
+                                                Style="{StaticResource PinkButton}"
+                                                FontSize="12"
+                                                Height="34"
+                                                Command="{Binding RecordCommand}" />
+                                        <Button Content="stop"
+                                                Style="{StaticResource PinkButton}"
+                                                FontSize="12"
+                                                Height="34"
+                                                Margin="0,4,0,0"
+                                                Command="{Binding StopRecordingCommand}" />
+
+                                        <Separator Margin="0,12" Opacity="0.3" />
+
+                                        <Button Content="+ add key"
+                                                Style="{StaticResource PinkButton}"
+                                                FontSize="11"
+                                                Height="30"
+                                                Command="{Binding AddKeyCommand}" />
+
+                                        <Separator Margin="0,12" Opacity="0.3" />
+
+                                        <TextBlock Text="batch delay mod"
+                                                   FontFamily="Lexend Tera"
+                                                   FontSize="10"
+                                                   Foreground="#F2B4BC"
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center"
+                                                   Margin="0,0,0,4" />
+                                        <Border CornerRadius="4"
+                                                BorderBrush="#F0E0E2"
+                                                BorderThickness="1"
+                                                Background="White"
+                                                Height="32"
+                                                HorizontalAlignment="Center"
+                                                Width="80">
+                                            <TextBox Text="{Binding BatchDelayText}"
+                                                     FontFamily="Lexend Tera"
+                                                     FontSize="13"
+                                                     Background="Transparent"
+                                                     BorderThickness="0"
+                                                     Padding="4,2"
+                                                     VerticalContentAlignment="Center"
+                                                     HorizontalAlignment="Center"
+                                                     TextAlignment="Center" />
+                                        </Border>
+                                        <Button Content="apply"
+                                                Style="{StaticResource PinkButton}"
+                                                FontSize="11"
+                                                Height="28"
+                                                Margin="0,6,0,0"
+                                                Command="{Binding ApplyBatchDelayCommand}" />
+
+                                        <Separator Margin="0,12" Opacity="0.3" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Event list -->
+                                <Border Grid.Column="1"
+                                        Background="#CCF5F5F5"
+                                        CornerRadius="10"
+                                        Margin="10,0,0,0"
+                                        BorderBrush="#F0E0E2"
+                                        BorderThickness="1">
+                                    <Grid Margin="12">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Text="events"
+                                                   FontFamily="Lexend Tera"
+                                                   FontSize="12"
+                                                   Foreground="#888888"
+                                                   Margin="2,0,0,8" />
+
+                                        <ListBox x:Name="EventListBox"
+                                                  Grid.Row="1"
+                                                  ItemsSource="{Binding SelectedMacro.Events}"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                  AllowDrop="True"
+                                                  PreviewMouseDown="OnEventListPreviewMouseDown"
+                                                  PreviewMouseMove="OnEventListMouseMove"
+                                                  Drop="OnEventListDrop"
+                                                  DragOver="OnEventListDragOver">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Padding" Value="8,6" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                <Border x:Name="ItemBorder"
+                                                                        Background="{TemplateBinding Background}"
+                                                                        CornerRadius="6"
+                                                                        Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#FCE4E8" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate DataType="models:KeyEvent">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border Grid.Column="0"
+                                                                Background="#FFF0F2"
+                                                                CornerRadius="6"
+                                                                Padding="12,4"
+                                                                MinWidth="52"
+                                                                Margin="0,0,10,0">
+                                                            <TextBlock Text="{Binding KeyDisplay}"
+                                                                       FontFamily="Lexend Tera"
+                                                                       FontSize="15"
+                                                                       FontWeight="Light"
+                                                                       Foreground="#1A1A1A"
+                                                                       HorizontalAlignment="Center" />
+                                                        </Border>
+
+                                                        <TextBox Grid.Column="1"
+                                                                 Text="{Binding DelayMs, StringFormat={}{0:F1}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 FontFamily="Lexend Tera"
+                                                                 FontSize="13"
+                                                                 Width="72"
+                                                                 Height="28"
+                                                                 Background="White"
+                                                                 BorderBrush="#F0E0E2"
+                                                                 BorderThickness="1"
+                                                                 VerticalContentAlignment="Center"
+                                                                 Padding="4,2" />
+                                                        <TextBlock Grid.Column="2"
+                                                                   Text="ms"
+                                                                   FontFamily="Lexend Tera"
+                                                                   FontSize="12"
+                                                                   Foreground="#888888"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="8,0,18,0" />
+
+                                                        <Button Grid.Column="4"
+                                                                Content="✕"
+                                                                Style="{StaticResource PinkButton}"
+                                                                FontSize="11"
+                                                                Height="26"
+                                                                Width="28"
+                                                                Padding="0"
+                                                                Tag="{Binding}"
+                                                                Click="OnRemoveEventClick" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
