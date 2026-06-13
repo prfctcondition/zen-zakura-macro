@@ -34,8 +34,6 @@
 
 ### Hotkeys
 - **Bind any key** — letters, numbers, F1–F12, Caps, Tab, Space, Enter, Backspace, arrows, Shift/Ctrl/Alt
-- **Automatic blocking** — bound keys are consumed by the hook and never reach the system
-- **Caps Lock handling** — synthetic undo ensures the system toggle state stays correct
 - **Unbind** — remove a binding with one click
 
 ### Global Pause / Resume
