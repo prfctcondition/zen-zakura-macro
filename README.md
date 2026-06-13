@@ -158,5 +158,5 @@ MIT. Do whatever you want.
 ---
 
 <p align="center">
-  <sub>made in 3 hours with 🩷</sub>
+  <sub>made in 3 hours so yeahh idk</sub>
 </p>
