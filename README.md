@@ -2,114 +2,114 @@
   <img src="sakura_bg.png" alt="Zen Zakura Macro" width="240" />
 </p>
 
-<h1 align="center">禅 桜 マクロ</h1>
-<h3 align="center">Zen Zakura Macro — элегантная запись и воспроизведение макросов для Windows</h3>
+<h1 align="center">zen zakura マクロ</h1>
+<h3 align="center">Zen Zakura Macro — elegant keyboard macro recorder & player for Windows</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/язык-C%23%20%2B%20C%2B%2B-9cf?style=flat-square" />
-  <img src="https://img.shields.io/badge/платформа-Windows%20x64-0078D4?style=flat-square" />
+  <img src="https://img.shields.io/badge/lang-C%23%20%2B%20C%2B%2B-9cf?style=flat-square" />
+  <img src="https://img.shields.io/badge/platform-Windows%20x64-0078D4?style=flat-square" />
   <img src="https://img.shields.io/badge/.NET-9.0-512BD4?style=flat-square" />
-  <img src="https://img.shields.io/badge/лицензия-MIT-yellow?style=flat-square" />
+  <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" />
 </p>
 
 <br />
 
-**Zen Zakura Macro** — программа для записи макросов клавиатуры с привязкой к горячим клавишам, вдохновлённая эстетикой японской минималистичности. Сочетает мощь нативного C++ ядра с элегантным WPF интерфейсом.
+**Zen Zakura Macro** is a keyboard macro recorder and player with hotkey binding, inspired by Japanese minimalist aesthetics. It combines a native C++ core for low-level input handling with a clean WPF UI built on .NET 9.
 
 ---
 
-## 桜 Возможности
+## 桜 Features
 
-### Запись и воспроизведение
-- **Запись нажатий** — захват клавиатурных событий в реальном времени с точными задержками между нажатиями
-- **Ручное редактирование** — добавление/удаление событий, изменение задержек, drag-and-drop перетаскивание
-- **Пакетная задержка** — применение единой задержки ко всем событиям макроса одной кнопкой
+### Recording & Editing
+- **Real-time recording** — captures keyboard events with precise timing between keystrokes
+- **Manual editing** — add, remove, reorder events; edit individual delays; drag-and-drop reordering
+- **Batch delay** — apply a single delay value to all events at once
 
-### Режимы воспроизведения
-| Режим | Описание |
-|-------|----------|
-| **Single time** | Макрос выполняется один раз при нажатии горячей клавиши |
-| **Repeat on hold** | Макрос циклически повторяется, пока зажата горячая клавиша |
-| **Toggle repeat** | Одно нажатие запускает бесконечный цикл, повторное — останавливает |
+### Playback Modes
+| Mode | Description |
+|------|-------------|
+| **Single time** | Executes once when the hotkey is pressed |
+| **Repeat on hold** | Loops continuously while the hotkey is held down |
+| **Toggle repeat** | One press starts an infinite loop; another press stops it |
 
-### Горячие клавиши
-- **Привязка макроса к любой клавише** (буквы, цифры, F1–F12, Caps, Tab, Space, Enter, Backspace, стрелки, Shift/Ctrl/Alt)
-- **Автоматическая блокировка** — привязанная клавиша не доходит до системы во время работы макроса
-- **Caps Lock** — корректно обрабатывается с синтетическим возвратом состояния, чтобы система не «залипала»
-- **Unbind** — отвязка клавиши одним нажатием
+### Hotkeys
+- **Bind any key** — letters, numbers, F1–F12, Caps, Tab, Space, Enter, Backspace, arrows, Shift/Ctrl/Alt
+- **Automatic blocking** — bound keys are consumed by the hook and never reach the system
+- **Caps Lock handling** — synthetic undo ensures the system toggle state stays correct
+- **Unbind** — remove a binding with one click
 
-### Глобальная пауза/возобновление
-- Настраиваемая горячая клавиша (Settings → global pause toggle key)
-- Мгновенно ставит на паузу все макросы и останавливает текущее воспроизведение
-- Повторное нажатие возобновляет работу
-- **Индикатор статуса** в боковой панели: `macros status: active` / `macros status: paused`, обновляется в реальном времени
+### Global Pause / Resume
+- Configurable hotkey (Settings → global pause toggle key)
+- Instantly pauses all macros and stops current playback
+- Press again to resume
+- **Status indicator** in the sidebar — `macros status: active` / `macros status: paused`, polling every 500ms
 
-### Фильтр активного окна (#IfWinActive)
-- **Процесс-ориентированный фильтр** — макросы работают только когда активен выбранный процесс (например, только в окне игры)
-- При переключении на другое окно макросы автоматически приостанавливаются
-- При возвращении в целевое окно — автоматически возобновляются
-- Список запущенных процессов для удобного выбора
+### Process-Aware Filter (#IfWinActive style)
+- **Per-process filtering** — macros only fire when a chosen window is in the foreground
+- Switching away automatically pauses all macros
+- Switching back automatically resumes them
+- Combo box lists all running processes for easy selection
 
-### Управление макросами
-- **Создание, переименование, удаление** макросов
-- **Сохранение / открытие** — формат `.zmacro` (JSON)
-- **Автосохранение** макрос привязан к файлу после первого сохранения
-- **Горячая клавиша для каждого макроса** — можно включить/отключить независимо чекбоксом
-- **Drag-and-drop** событий внутри редактора
+### Macro Management
+- **Create, rename, delete** macros
+- **Save / Open** — native `.zmacro` format (JSON)
+- **Per-macro hotkey toggle** — enable/disable each macro's hotkey independently via checkbox
+- **File-backed** — macros are linked to files on first save; subsequent saves write in-place
+- **Drag-and-drop** event reordering within the editor
 
-### Интерфейс
-- Стилизованное окно без заголовка с кастомными кнопками свернуть/закрыть
-- Сакура-фон в японском стиле
-- Перетаскивание окна за любую область заголовка
-- Сворачивание в системный трей с иконкой и контекстным меню (Show / Exit)
-- Двойной клик по иконке трея — восстановление окна
+### Interface
+- Frameless custom window with minimize / close buttons
+- Sakura blossom background
+- Minimize to system tray with context menu (Show / Exit)
+- Double-click tray icon to restore window
+- Drag the window by its title area
 
-### Персистентность
-- Все настройки (клавиша паузы, фильтр процесса) сохраняются в `%LOCALAPPDATA%/ZenZakura/settings.json`
-- Макросы хранятся в папке `Macros/` рядом с исполняемым файлом
-
----
-
-## 桜 Потенциальные кейсы применения
-
-| Сценарий | Описание |
-|----------|----------|
-| 🎮 **Игровые макросы** | Автоматизация сложных комбинаций клавиш в играх (MMO, MOBA, файтинги). Фильтр процесса гарантирует, что макросы срабатывают только в игре |
-| ⌨️ **Ускорение рутины** | Выполнение повторяющихся последовательностей ввода (логин, формы, вставка шаблонов) |
-| 🎨 **Дизайн/монтаж** | Быстрая вставка горячих клавиш для Photoshop, After Effects, Blender |
-| 💻 **Разработка** | Автоматизация типовых действий в IDE, консольных команд, сниппетов |
-| 🏢 **Офисные задачи** | Заполнение таблиц, шаблонные ответы, работа с 1С/CRM |
-| 🔁 **Фарм в играх** | Циклическое выполнение действий с настраиваемой задержкой через режим Toggle Repeat |
+### Persistence
+- Settings saved to `%LOCALAPPDATA%/ZenZakura/settings.json`
+- Macros stored as `.zmacro` files in `Macros/` next to the executable
 
 ---
 
-## 桜 Быстрый старт
+## 桜 Use Cases
 
-### Скачать
-[Последний релиз](https://github.com/dxsvs/zen-zakura-macro/releases) — установщик `.exe` (Inno Setup).
+| Scenario | Description |
+|----------|-------------|
+| 🎮 **Gaming macros** | Automate complex key sequences in MMOs, MOBAs, and fighting games. Process filter ensures macros only fire in-game |
+| ⌨️ **Productivity** | Speed up repetitive input — login forms, canned responses, templates |
+| 🎨 **Design / editing** | Insert common hotkey sequences for Photoshop, After Effects, Blender |
+| 💻 **Development** | Automate IDE actions, console commands, boilerplate snippets |
+| 🏢 **Office** | Data entry, spreadsheet automation, CRM workflows |
+| 🔁 **AFK loops** | Cyclic actions with configurable delay via Toggle Repeat mode |
 
-### Собрать из исходников
-Требования: Visual Studio 2022+ (C++ workload), .NET 9 SDK.
+---
+
+## 桜 Quick Start
+
+### Download
+[Latest release](https://github.com/prfctcondition/zen-zakura-macro/releases) — Prebuilt .zip and Inno Setup Installer.
+
+### Build from source
+Requirements: Visual Studio 2022+ (C++ workload), .NET 9 SDK.
 
 ```bash
-# Developer Command Prompt for VS 2022+
+# Open Developer Command Prompt for VS 2022+
 
 msbuild ZenZakuraCore\ZenZakuraCore.vcxproj /p:Configuration=Release /p:Platform=x64
 
 dotnet publish ZenZakuraUI\ZenZakuraUI.csproj -c Release -o bin\Release
 
-# Копировать ассеты
+# Copy assets
 copy ZenZakuraCore\x64\Release\ZenZakuraCore.dll bin\Release\
 copy app.ico bin\Release\
 copy sakura_bg.png bin\Release\
 md bin\Release\Macros
 ```
 
-Подробнее — `BUILD.md`.
+See `BUILD.md` for details.
 
 ---
 
-## 桜 Технический стек
+## 桜 Tech Stack
 
 ```
 ┌─────────────────────────────────┐
@@ -118,46 +118,45 @@ md bin\Release\Macros
 ├─────────────────────────────────┤
 │  ZenZakuraCore.dll (C++)       │
 │  WinAPI, LL keyboard hook,     │
-│  высокоточный таймер, трейдинг │
+│  high-res timer, SendInput     │
 └─────────────────────────────────┘
 ```
 
-- **Ядро** — C++, низкоуровневый хукинг клавиатуры (`WH_KEYBOARD_LL`), точные задержки через `QueryPerformanceCounter`, режим реального времени
-- **UI** — WPF (.NET 9), паттерн MVVM, CommunityToolkit.Mvvm, кастомные стили, Lexend Tera шрифт
-- **Связь** — P/Invoke, коллбэки из C++ в C# через `stdcall`, `SendInput` для эмуляции ввода
-- **Сборка** — MSVC + dotnet CLI, Inno Setup для установщика
+- **Core** — C++, low-level `WH_KEYBOARD_LL` hooking, `QueryPerformanceCounter`-based timing, real-time input processing
+- **UI** — WPF (.NET 9), MVVM pattern, CommunityToolkit.Mvvm, custom styles, Lexend Tera font
+- **Interop** — P/Invoke, `stdcall` callbacks from C++ to C#, `SendInput` for key emulation
+- **Build** — MSVC + dotnet CLI
 
 ---
 
-## 桜 Структура проекта
+## 桜 Project Structure
 
 ```
 zen-zakura-macro/
-├── ZenZakuraCore/          # C++ ядро
+├── ZenZakuraCore/          # C++ engine
 │   ├── src/                # HookEngine, PlaybackEngine, BindingEngine, Timing
-│   ├── include/            # Публичный API (ZenZakuraCore.h)
+│   ├── include/            # Public API (ZenZakuraCore.h)
 │   └── ZenZakuraCore.vcxproj
-├── ZenZakuraUI/            # WPF интерфейс
+├── ZenZakuraUI/            # WPF frontend
 │   ├── Models/             # Macro, KeyEvent, PlaybackMode
 │   ├── ViewModels/         # MainViewModel, SettingsViewModel
 │   ├── Views/...           # MainWindow, SettingsWindow
 │   ├── Services/           # CoreInterop, MacroStorage, TrayService
 │   ├── Converters/         # BoolToPauseState, NullToVisibility
 │   └── Themes/             # Colors.xaml, Styles.xaml
-├── installer/              # Inno Setup скрипт
-├── build.ps1               # Скрипт сборки
-├── BUILD.md                # Инструкция по сборке
-└── README.md               # Этот файл
+├── build.ps1               # Build script
+├── BUILD.md                # Build instructions
+└── README.md               # This file
 ```
 
 ---
 
-## 桜 Лицензия
+## 桜 License
 
-MIT. Делайте что хотите.
+MIT. Do whatever you want.
 
 ---
 
 <p align="center">
-  <sub>сделано с 🩷 и сакурой</sub>
+  <sub>made in 3 hours with 🩷</sub>
 </p>
