@@ -113,12 +113,12 @@ See `BUILD.md` for details.
 
 ```
 ┌─────────────────────────────────┐
-│  ZenZakuraUI.exe (WPF / C#)    │
+│  ZenZakuraUI.exe (WPF / C#)     │
 │  .NET 9, MVVM, CommunityToolkit │
 ├─────────────────────────────────┤
-│  ZenZakuraCore.dll (C++)       │
-│  WinAPI, LL keyboard hook,     │
-│  high-res timer, SendInput     │
+│  ZenZakuraCore.dll (C++)        │
+│  WinAPI, LL keyboard hook,      │
+│  high-res timer, SendInput      │
 └─────────────────────────────────┘
 ```
 
