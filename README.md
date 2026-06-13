@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="sakura_bg.png" alt="Zen Zakura Macro" width="240" />
+  <img src="zenzakuraui.png" alt="Zen Zakura Macro" />
 </p>
 
 <h1 align="center">zen zakura マクロ</h1>
