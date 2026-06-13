@@ -146,7 +146,7 @@ public partial class MainViewModel : ObservableObject
 
     private void UpdateBindKeyDisplay(uint? vk)
     {
-        BindKeyDisplay = vk.HasValue ? VkToString(vk.Value) : "";
+        BindKeyDisplay = vk.HasValue ? $"{VkToString(vk.Value)} (0x{vk.Value:X2})" : "";
         BindKey = vk ?? 0;
     }
 
@@ -314,6 +314,7 @@ public partial class MainViewModel : ObservableObject
     private static string VkToString(uint vk)
     {
         if (vk >= 0x41 && vk <= 0x5A) return ((char)vk).ToString();
+        if (vk >= 0x30 && vk <= 0x39) return ((char)vk).ToString();
         return vk switch
         {
             0x1B => "Esc", 0x09 => "Tab", 0x14 => "Caps",

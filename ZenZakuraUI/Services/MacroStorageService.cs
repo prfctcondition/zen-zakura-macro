@@ -11,7 +11,8 @@ public class MacroStorageService
     public MacroStorageService()
     {
         _basePath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "Macros");
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ZenZakura", "Macros");
         try
         {
             Directory.CreateDirectory(_basePath);
@@ -59,17 +60,25 @@ public class MacroStorageService
         {
             macro.FilePath = Path.Combine(_basePath, SanitizeName(macro.Name) + ".zmacro");
         }
-        var json = macro.ToJson();
-        if (!string.IsNullOrWhiteSpace(json))
-            File.WriteAllText(macro.FilePath, json);
+        try
+        {
+            var json = macro.ToJson();
+            if (!string.IsNullOrWhiteSpace(json))
+                File.WriteAllText(macro.FilePath, json);
+        }
+        catch { }
     }
 
     public void SaveAs(Macro macro, string filePath)
     {
         macro.FilePath = filePath;
-        var json = macro.ToJson();
-        if (!string.IsNullOrWhiteSpace(json))
-            File.WriteAllText(filePath, json);
+        try
+        {
+            var json = macro.ToJson();
+            if (!string.IsNullOrWhiteSpace(json))
+                File.WriteAllText(filePath, json);
+        }
+        catch { }
     }
 
     public Macro? Open(string filePath)
@@ -92,7 +101,9 @@ public class MacroStorageService
     public void Delete(Macro macro)
     {
         if (!string.IsNullOrEmpty(macro.FilePath) && File.Exists(macro.FilePath))
-            File.Delete(macro.FilePath);
+        {
+            try { File.Delete(macro.FilePath); } catch { }
+        }
         macro.FilePath = "";
     }
 
@@ -102,17 +113,21 @@ public class MacroStorageService
         macro.Name = newName;
         if (!string.IsNullOrEmpty(oldPath) && File.Exists(oldPath))
         {
-            var dir = Path.GetDirectoryName(oldPath)!;
-            var newPath = Path.Combine(dir, SanitizeName(newName) + ".zmacro");
-            if (!oldPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
+            try
             {
-                File.Move(oldPath, newPath, overwrite: true);
+                var dir = Path.GetDirectoryName(oldPath)!;
+                var newPath = Path.Combine(dir, SanitizeName(newName) + ".zmacro");
+                if (!oldPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Move(oldPath, newPath, overwrite: true);
+                }
+                else
+                {
+                    File.WriteAllText(oldPath, macro.ToJson());
+                }
+                macro.FilePath = newPath;
             }
-            else
-            {
-                File.WriteAllText(oldPath, macro.ToJson());
-            }
-            macro.FilePath = newPath;
+            catch { }
         }
     }
 

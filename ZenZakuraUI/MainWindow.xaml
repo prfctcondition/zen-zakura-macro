@@ -317,7 +317,8 @@
                                                     Background="White"
                                                     BorderBrush="#F0E0E2"
                                                     BorderThickness="1"
-                                                    Height="38" Width="70">
+                                                    Height="38" MinWidth="70"
+                                                    Padding="8,0">
                                                 <TextBlock Text="{Binding BindKeyDisplay}"
                                                            FontFamily="Lexend Tera"
                                                            FontSize="12"

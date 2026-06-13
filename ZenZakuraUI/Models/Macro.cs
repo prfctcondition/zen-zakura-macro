@@ -26,13 +26,21 @@ public partial class Macro : ObservableObject
     public string FilePath { get; set; } = "";
 
     [JsonIgnore]
-    public string BindKeyDisplay => BindKey.HasValue ? VkToString(BindKey.Value) : "";
+    public string BindKeyDisplay
+    {
+        get
+        {
+            if (!BindKey.HasValue) return "";
+            return $"{VkToString(BindKey.Value)} (0x{BindKey.Value:X2})";
+        }
+    }
 
     public void RaiseEventsChanged() => OnPropertyChanged(nameof(Events));
 
     private static string VkToString(uint vk)
     {
         if (vk >= 0x41 && vk <= 0x5A) return ((char)vk).ToString();
+        if (vk >= 0x30 && vk <= 0x39) return ((char)vk).ToString();
         return vk switch
         {
             0x1B => "Esc", 0x09 => "Tab", 0x14 => "Caps",
