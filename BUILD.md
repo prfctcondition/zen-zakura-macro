@@ -6,6 +6,7 @@
   - "Desktop development with C++" workload
   - `cl.exe` (MSVC compiler) available
 - **.NET 9 SDK** (`dotnet --version` should show 9.x)
+- **Inno Setup 6** (optional, for building the installer)
 
 ## Quick Build (using build script)
 
@@ -33,18 +34,22 @@ The DLL will be at `ZenZakuraCore\x64\Release\ZenZakuraCore.dll`.
 dotnet publish ZenZakuraUI\ZenZakuraUI.csproj -c Release -o bin\Release
 ```
 
-### 3. Copy assets
-
-Copy these files to `bin\Release\`:
+### 3. Copy C++ DLL to output
 
 ```
 ZenZakuraCore\x64\Release\ZenZakuraCore.dll  →  bin\Release\
-app.ico                                       →  bin\Release\
-sakura_bg.png                                 →  bin\Release\
 ```
-
-Also create an empty `bin\Release\Macros\` directory.
 
 ## Running
 
 After building, run `bin\Release\ZenZakuraUI.exe`.
+
+## Building the Installer
+
+With Inno Setup 6 installed:
+
+```cmd
+iscc installer\setup.iss
+```
+
+Output: `installer\Output\ZenZakuraMacro-Setup.exe`
