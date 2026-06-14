@@ -20,11 +20,17 @@
 
 ## 桜 Demo
 
-| | |
-|---|---|
-| <img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo1.gif?raw=true" width="360"/> | **Create, edit & manage macros** — rename, adjust delays, reorder by dragging, bind/unbind keys, toggle hotkeys on/off |
-| <img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo2.gif?raw=true" width="360"/> | **Record & playback in action** — capture keystrokes in real time, replay on Notepad. All three modes: single time, repeat on hold, toggle repeat |
-| <img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo3.gif?raw=true" width="360"/> | **Gaming combo** — record an in-game ability rotation (Zed, League of Legends) and execute it instantly with a single hotkey |
+<img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo1.gif?raw=true" width="720"/>
+
+**Create, edit & manage macros** — rename, adjust delays, reorder by dragging, bind/unbind keys, toggle hotkeys on/off
+
+<img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo2.gif?raw=true" width="720"/>
+
+**Record & playback in action** — capture keystrokes in real time, replay on Notepad. All three modes: single time, repeat on hold, toggle repeat
+
+<img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo3.gif?raw=true" width="720"/>
+
+**Gaming combo** — record an in-game ability rotation using Zed from League of Legends as an example, then execute it instantly with a single hotkey. Works in any MOBA, fighting game, or FPS
 
 ---
 
