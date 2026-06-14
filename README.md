@@ -18,6 +18,16 @@
 
 ---
 
+## 桜 Demo
+
+| | |
+|---|---|
+| <img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo1.gif?raw=true" width="360"/> | **Create, edit & manage macros** — rename, adjust delays, reorder by dragging, bind/unbind keys, toggle hotkeys on/off |
+| <img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo2.gif?raw=true" width="360"/> | **Record & playback in action** — capture keystrokes in real time, replay on Notepad. All three modes: single time, repeat on hold, toggle repeat |
+| <img src="https://github.com/prfctcondition/zen-zakura-macro/blob/main/demo3.gif?raw=true" width="360"/> | **Gaming combo** — record an in-game ability rotation (Zed, League of Legends) and execute it instantly with a single hotkey |
+
+---
+
 ## 桜 Features
 
 ### Recording & Editing
@@ -64,7 +74,7 @@
 
 ### Persistence
 - Settings saved to `%LOCALAPPDATA%/ZenZakura/settings.json`
-- Macros stored as `.zmacro` files in `Macros/` next to the executable
+- Macros stored as `.zmacro` files in `%LOCALAPPDATA%/ZenZakura/Macros/`
 
 ---
 
@@ -96,11 +106,13 @@ msbuild ZenZakuraCore\ZenZakuraCore.vcxproj /p:Configuration=Release /p:Platform
 
 dotnet publish ZenZakuraUI\ZenZakuraUI.csproj -c Release -o bin\Release
 
-# Copy assets
+# Copy C++ DLL to output
 copy ZenZakuraCore\x64\Release\ZenZakuraCore.dll bin\Release\
-copy app.ico bin\Release\
-copy sakura_bg.png bin\Release\
-md bin\Release\Macros
+```
+
+Or use the build script:
+```powershell
+.\build.ps1
 ```
 
 See `BUILD.md` for details.
@@ -156,5 +168,5 @@ MIT. Do whatever you want.
 ---
 
 <p align="center">
-  <sub>made in 3 hours so yeahh idk</sub>
+  <sub>built with ❤️ for gamers & power users</sub>
 </p>
