@@ -1,0 +1,90 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "ZenZakuraUI/1.0.0": {
+        "dependencies": {
+          "CommunityToolkit.Mvvm": "8.4.2",
+          "Hardcodet.Wpf.TaskbarNotification": "1.0.5",
+          "System.Drawing.Common": "9.0.17"
+        },
+        "runtime": {
+          "ZenZakuraUI.dll": {}
+        }
+      },
+      "CommunityToolkit.Mvvm/8.4.2": {
+        "runtime": {
+          "lib/net8.0/CommunityToolkit.Mvvm.dll": {
+            "assemblyVersion": "8.4.0.0",
+            "fileVersion": "8.4.2.1"
+          }
+        }
+      },
+      "Hardcodet.NotifyIcon.Wpf/1.0.5": {
+        "runtime": {
+          "lib/net451/Hardcodet.Wpf.TaskbarNotification.dll": {
+            "assemblyVersion": "1.0.5.0",
+            "fileVersion": "1.0.5.0"
+          }
+        }
+      },
+      "Hardcodet.Wpf.TaskbarNotification/1.0.5": {
+        "dependencies": {
+          "Hardcodet.NotifyIcon.Wpf": "1.0.5"
+        }
+      },
+      "Microsoft.Win32.SystemEvents/9.0.17": {},
+      "System.Drawing.Common/9.0.17": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "9.0.17"
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ZenZakuraUI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CommunityToolkit.Mvvm/8.4.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg==",
+      "path": "communitytoolkit.mvvm/8.4.2",
+      "hashPath": "communitytoolkit.mvvm.8.4.2.nupkg.sha512"
+    },
+    "Hardcodet.NotifyIcon.Wpf/1.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-krb3mprxu3Ehp08L+8llo4NRi37MRboDJgFb9Xe+u7LVOIZYb0IdPyhPl7Rb1iV5xaKpMjFkMqu0aoheH8pMuQ==",
+      "path": "hardcodet.notifyicon.wpf/1.0.5",
+      "hashPath": "hardcodet.notifyicon.wpf.1.0.5.nupkg.sha512"
+    },
+    "Hardcodet.Wpf.TaskbarNotification/1.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0UpQpF/vLXCLONVAp8Tc43qRWmf985TCV2MwzOgdwHJ5c7cSiNW4VtEuiZcdooW84kqdZnxnL4AM3/Xs9JI/mQ==",
+      "path": "hardcodet.wpf.taskbarnotification/1.0.5",
+      "hashPath": "hardcodet.wpf.taskbarnotification.1.0.5.nupkg.sha512"
+    },
+    "Microsoft.Win32.SystemEvents/9.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jVoJLPC3NEmXe0vAhmyvaHpa025q5yBFJ5muwgVFGueAFKYNmjVQRv/cr+FjwOQgC7xzakE8bvAQ/JqYkJhOxg==",
+      "path": "microsoft.win32.systemevents/9.0.17",
+      "hashPath": "microsoft.win32.systemevents.9.0.17.nupkg.sha512"
+    },
+    "System.Drawing.Common/9.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cphaI7VxsMb/RSXoAbi4jXMU9v58EVZUSRVQf4UFI36YxZ6X0598/glQBik/Y4/mdBxvURFLZWbdyTUXOdF86Q==",
+      "path": "system.drawing.common/9.0.17",
+      "hashPath": "system.drawing.common.9.0.17.nupkg.sha512"
+    }
+  }
+}

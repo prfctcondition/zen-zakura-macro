@@ -28,7 +28,7 @@
             x:Name="WindowRoot">
         <Grid>
             <!-- Sakura background overlay at full opacity -->
-            <Image Source="sakura_bg.png"
+            <Image Source="Resources/sakura_bg.png"
                    Stretch="UniformToFill"
                    Opacity="1.0"
                    IsHitTestVisible="False" />

@@ -24,9 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\sakura_bg.png" Link="Resources\sakura_bg.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="..\sakura_bg.png" Link="Resources\sakura_bg.png" />
   </ItemGroup>
 
   <ItemGroup>

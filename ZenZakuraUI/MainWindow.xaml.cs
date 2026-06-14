@@ -31,7 +31,11 @@ public partial class MainWindow : Window
             if (_vm.SelectedMacro == null) return;
             var count = _vm.SelectedMacro.Events.Count;
             if (count > 0)
-                EventListBox?.ScrollIntoView(_vm.SelectedMacro.Events[count - 1]);
+            {
+                var scroll = FindScrollViewer(EventListBox);
+                if (scroll == null || scroll.VerticalOffset >= scroll.ScrollableHeight - 10)
+                    EventListBox?.ScrollIntoView(_vm.SelectedMacro.Events[count - 1]);
+            }
         };
 
         Loaded += (_, _) =>
@@ -233,6 +237,19 @@ public partial class MainWindow : Window
             Hide();
             _trayService?.Show();
         }
+    }
+
+    private static ScrollViewer? FindScrollViewer(DependencyObject? root)
+    {
+        if (root == null) return null;
+        var viewer = root as ScrollViewer;
+        if (viewer != null) return viewer;
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var result = FindScrollViewer(VisualTreeHelper.GetChild(root, i));
+            if (result != null) return result;
+        }
+        return null;
     }
 
     private static T? FindVisualParent<T>(DependencyObject? child) where T : DependencyObject

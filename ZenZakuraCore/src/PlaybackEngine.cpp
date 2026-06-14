@@ -1,4 +1,5 @@
 #include "PlaybackEngine.h"
+#include <memory>
 #include <intrin.h>
 #pragma comment(lib, "user32.lib")
 
@@ -6,9 +7,9 @@ PlaybackEngine* PlaybackEngine::s_instance = nullptr;
 
 PlaybackEngine::PlaybackEngine()
     : m_hThread(nullptr)
-    , m_abort(false)
     , m_playing(false)
     , m_playbackVK(0)
+    , m_currentData(nullptr)
     , m_statusCb(nullptr)
 {
     s_instance = this;
@@ -21,31 +22,35 @@ PlaybackEngine::~PlaybackEngine() {
 
 void PlaybackEngine::Play(const ZenKeyEvent* events, int count, ZenPlayMode mode, int repeatDelayMs, uint32_t bindVK) {
     Stop();
-    m_abort = false;
+
+    m_currentData = new PlaybackData();
+    m_currentData->events.assign(events, events + count);
+    m_currentData->mode = mode;
+    m_currentData->repeatDelayMs = repeatDelayMs;
+    m_currentData->bindVK = bindVK;
+
     m_playing = true;
     m_playbackVK = bindVK;
 
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 
-    PlaybackData* data = new PlaybackData();
-    data->events.assign(events, events + count);
-    data->mode = mode;
-    data->repeatDelayMs = repeatDelayMs;
-    data->bindVK = bindVK;
-
-    m_hThread = CreateThread(nullptr, 0, PlaybackThread, data, 0, nullptr);
+    m_hThread = CreateThread(nullptr, 0, PlaybackThread, m_currentData, 0, nullptr);
     if (m_hThread) {
         SetThreadPriority(m_hThread, THREAD_PRIORITY_TIME_CRITICAL);
     }
 }
 
 void PlaybackEngine::Stop() {
-    m_abort = true;
+    if (m_currentData) {
+        m_currentData->abort.store(true);
+    }
     if (m_hThread) {
-        WaitForSingleObject(m_hThread, 2000);
+        WaitForSingleObject(m_hThread, 5000);
         CloseHandle(m_hThread);
         m_hThread = nullptr;
     }
+    delete m_currentData;
+    m_currentData = nullptr;
     m_playing = false;
 }
 
@@ -64,7 +69,6 @@ void PlaybackEngine::SendKey(uint32_t vk, BOOL down) {
     DWORD flags = KEYEVENTF_SCANCODE;
     if (!down) flags |= KEYEVENTF_KEYUP;
 
-    // Extended keys need KEYEVENTF_EXTENDEDKEY
     switch (vk) {
         case VK_LEFT: case VK_UP: case VK_RIGHT: case VK_DOWN:
         case VK_HOME: case VK_END: case VK_PRIOR: case VK_NEXT:
@@ -89,57 +93,58 @@ DWORD WINAPI PlaybackEngine::PlaybackThread(LPVOID param) {
     PlaybackData* data = (PlaybackData*)param;
 
     if (data->mode == ZEN_PLAY_ONCE) {
-        s_instance->ExecuteOnce(data->events);
+        s_instance->ExecuteOnce(data->events, data->abort);
     }
     else if (data->mode == ZEN_PLAY_REPEAT_WHILE_HELD) {
-        s_instance->ExecuteRepeatWhileHeld(data->events, data->repeatDelayMs, data->bindVK);
+        s_instance->ExecuteRepeatWhileHeld(data->events, data->repeatDelayMs, data->bindVK, data->abort);
     }
     else if (data->mode == ZEN_PLAY_TOGGLE_REPEAT) {
-        s_instance->ExecuteToggleRepeat(data->events, data->repeatDelayMs);
+        s_instance->ExecuteToggleRepeat(data->events, data->repeatDelayMs, data->abort);
     }
 
     s_instance->m_playing = false;
     ZenPlaybackStatusCallback cb = s_instance->m_statusCb;
-    if (cb) cb(!s_instance->m_abort, 0);
+    if (cb) cb(!data->abort.load(), 0);
 
-    delete data;
     return 0;
 }
 
-void PlaybackEngine::ExecuteOnce(const std::vector<ZenKeyEvent>& events) {
+void PlaybackEngine::ExecuteOnce(const std::vector<ZenKeyEvent>& events, std::atomic<bool>& abort) {
     for (size_t i = 0; i < events.size(); i++) {
-        if (m_abort) return;
-        m_timer.PreciseWait(events[i].delayMs, &m_abort);
-        if (m_abort) return;
+        if (abort.load(std::memory_order_relaxed)) return;
+        m_timer.PreciseWait(events[i].delayMs, &abort);
+        if (abort.load(std::memory_order_relaxed)) return;
         SendKey(events[i].vk, events[i].down);
     }
 }
 
-void PlaybackEngine::ExecuteRepeatWhileHeld(const std::vector<ZenKeyEvent>& events, int repeatDelayMs, uint32_t bindVK) {
+void PlaybackEngine::ExecuteRepeatWhileHeld(const std::vector<ZenKeyEvent>& events, int repeatDelayMs, uint32_t bindVK, std::atomic<bool>& abort) {
     (void)bindVK;
-    while (!m_abort) {
+    while (true) {
+        if (abort.load(std::memory_order_relaxed)) return;
         for (size_t i = 0; i < events.size(); i++) {
-            if (m_abort) return;
-            m_timer.PreciseWait(events[i].delayMs, &m_abort);
-            if (m_abort) return;
+            if (abort.load(std::memory_order_relaxed)) return;
+            m_timer.PreciseWait(events[i].delayMs, &abort);
+            if (abort.load(std::memory_order_relaxed)) return;
             SendKey(events[i].vk, events[i].down);
         }
         if (repeatDelayMs > 0) {
-            m_timer.PreciseWait((double)repeatDelayMs, &m_abort);
+            m_timer.PreciseWait((double)repeatDelayMs, &abort);
         }
     }
 }
 
-void PlaybackEngine::ExecuteToggleRepeat(const std::vector<ZenKeyEvent>& events, int repeatDelayMs) {
-    for (int cycle = 0; !m_abort; cycle++) {
+void PlaybackEngine::ExecuteToggleRepeat(const std::vector<ZenKeyEvent>& events, int repeatDelayMs, std::atomic<bool>& abort) {
+    for (int cycle = 0; ; cycle++) {
+        if (abort.load(std::memory_order_relaxed)) return;
         for (size_t i = 0; i < events.size(); i++) {
-            if (m_abort) return;
-            m_timer.PreciseWait(events[i].delayMs, &m_abort);
-            if (m_abort) return;
+            if (abort.load(std::memory_order_relaxed)) return;
+            m_timer.PreciseWait(events[i].delayMs, &abort);
+            if (abort.load(std::memory_order_relaxed)) return;
             SendKey(events[i].vk, events[i].down);
         }
         if (repeatDelayMs > 0) {
-            m_timer.PreciseWait((double)repeatDelayMs, &m_abort);
+            m_timer.PreciseWait((double)repeatDelayMs, &abort);
         }
     }
 }

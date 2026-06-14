@@ -12,6 +12,13 @@ extern char g_processFilter[MAX_PATH];
 extern volatile bool g_processFilterEnabled;
 extern void CheckAutoPause();
 
+// Don't execute bindings when Shift, Ctrl, or Alt is held
+static bool IsModifierHeld() {
+    return (GetAsyncKeyState(VK_SHIFT) & 0x8000) ||
+           (GetAsyncKeyState(VK_CONTROL) & 0x8000) ||
+           (GetAsyncKeyState(VK_MENU) & 0x8000);
+}
+
 HookEngine* HookEngine::s_instance = nullptr;
 
 HookEngine::HookEngine()
@@ -82,9 +89,10 @@ LRESULT CALLBACK HookEngine::HookProc(int code, WPARAM wParam, LPARAM lParam) {
             bool isPauseKey = kb->vkCode < 256 && g_pauseToggleVK != 0 && kb->vkCode == g_pauseToggleVK;
             bool effectivelyPaused = g_hookPaused || g_autoPaused;
 
-            // Block bound keys and pause toggle key from reaching the system
+            // Block bound keys (only if no modifier held) and pause toggle key
             if (kb->vkCode < 256 && s_instance->m_mode == HookMode::Idle && !effectivelyPaused) {
-                if ((g_bindingEngine && g_bindingEngine->IsBound(kb->vkCode)) || isPauseKey) {
+                bool bound = g_bindingEngine && g_bindingEngine->IsBound(kb->vkCode);
+                if (bound && !IsModifierHeld()) {
                     // Undo Caps Lock toggle — driver toggles it before the hook runs
                     if (kb->vkCode == VK_CAPITAL && down) {
                         INPUT toggle[2] = {};
@@ -97,6 +105,8 @@ LRESULT CALLBACK HookEngine::HookProc(int code, WPARAM wParam, LPARAM lParam) {
                     }
                     return 1;
                 }
+                if (isPauseKey)
+                    return 1;
             }
 
             // When paused, still block the pause toggle key itself
@@ -153,6 +163,7 @@ void HookEngine::HandleKeyEvent(uint32_t vk, bool down, WPARAM wParam) {
             if (g_bindingEngine) {
                 Binding* b = g_bindingEngine->Find(vk);
                 if (b && g_playbackEngine) {
+                    if (IsModifierHeld()) return;
                     if (b->mode == ZEN_PLAY_TOGGLE_REPEAT) {
                         if (g_playbackEngine->IsPlaying())
                             g_playbackEngine->Stop();

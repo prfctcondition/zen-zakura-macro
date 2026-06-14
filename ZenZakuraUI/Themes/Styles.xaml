@@ -93,18 +93,12 @@
     <Style TargetType="ScrollBar">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Width" Value="6" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ScrollBar">
-                    <Track x:Name="PART_Track">
-                        <Track.Thumb>
-                            <Thumb Background="{StaticResource SakuraPinkLightBrush}"
-                                   BorderThickness="0" />
-                        </Track.Thumb>
-                    </Track>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Style.Resources>
+            <Style TargetType="Thumb">
+                <Setter Property="Background" Value="{StaticResource SakuraPinkLightBrush}" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+        </Style.Resources>
     </Style>
 
     <Style TargetType="Label" x:Key="PinkLabel">

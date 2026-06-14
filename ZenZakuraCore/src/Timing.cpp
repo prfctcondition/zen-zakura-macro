@@ -26,7 +26,7 @@ LONGLONG HighResTimer::MsToTicks(double ms) const {
     return (LONGLONG)((ms / 1000.0) * m_freq.QuadPart);
 }
 
-void HighResTimer::SpinWait(double ms, volatile const bool* abortFlag) const {
+void HighResTimer::SpinWait(double ms, const std::atomic<bool>* abortFlag) const {
     if (ms <= 0.0) return;
     LARGE_INTEGER target;
     target.QuadPart = Now().QuadPart + MsToTicks(ms);
@@ -38,7 +38,7 @@ void HighResTimer::SpinWait(double ms, volatile const bool* abortFlag) const {
     } while (now.QuadPart < target.QuadPart);
 }
 
-void HighResTimer::PreciseWait(double ms, volatile const bool* abortFlag) const {
+void HighResTimer::PreciseWait(double ms, const std::atomic<bool>* abortFlag) const {
     if (ms <= 0.0) return;
     if (ms < 2.0) {
         SpinWait(ms, abortFlag);

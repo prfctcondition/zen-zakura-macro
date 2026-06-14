@@ -39,11 +39,8 @@ if ($LASTEXITCODE -ne 0) { throw "dotnet restore failed" }
 & dotnet publish $uiProj -c $Configuration -o "$OutputDir" --self-contained false
 if ($LASTEXITCODE -ne 0) { throw "C# build failed" }
 
-# Step 3: Copy assets
-Write-Host "[3/4] Copying assets..." -ForegroundColor Yellow
-Copy-Item (Join-Path $RootDir "app.ico") (Join-Path $OutputDir "app.ico") -Force
-Copy-Item (Join-Path $RootDir "sakura_bg.png") (Join-Path $OutputDir "sakura_bg.png") -Force
-New-Item -ItemType Directory -Path (Join-Path $OutputDir "Macros") -Force | Out-Null
+
+
 
 Write-Host "[4/4] Done!" -ForegroundColor Green
 Write-Host "Output: $OutputDir\ZenZakuraUI.exe" -ForegroundColor Green

@@ -1,0 +1,7 @@
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\ZenZakuraUI.exe
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\ZenZakuraUI.dll
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\ZenZakuraUI.deps.json
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\ZenZakuraUI.runtimeconfig.json
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\ZenZakuraUI.pdb
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\CommunityToolkit.Mvvm.dll
+C:\Users\dxsvs\Desktop\zen-zakura-macro\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll

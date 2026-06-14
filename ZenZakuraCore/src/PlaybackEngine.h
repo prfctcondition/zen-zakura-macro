@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <windows.h>
 #include <vector>
 #include "../include/ZenZakuraCore.h"
@@ -23,17 +24,18 @@ private:
         ZenPlayMode mode;
         int repeatDelayMs;
         uint32_t bindVK;
+        std::atomic<bool> abort{false};
     };
 
-    void ExecuteOnce(const std::vector<ZenKeyEvent>& events);
-    void ExecuteRepeatWhileHeld(const std::vector<ZenKeyEvent>& events, int repeatDelayMs, uint32_t bindVK);
-    void ExecuteToggleRepeat(const std::vector<ZenKeyEvent>& events, int repeatDelayMs);
+    void ExecuteOnce(const std::vector<ZenKeyEvent>& events, std::atomic<bool>& abort);
+    void ExecuteRepeatWhileHeld(const std::vector<ZenKeyEvent>& events, int repeatDelayMs, uint32_t bindVK, std::atomic<bool>& abort);
+    void ExecuteToggleRepeat(const std::vector<ZenKeyEvent>& events, int repeatDelayMs, std::atomic<bool>& abort);
     void SendKey(uint32_t vk, BOOL down);
 
     HANDLE m_hThread;
-    volatile bool m_abort;
     volatile bool m_playing;
     uint32_t m_playbackVK;
+    PlaybackData* m_currentData;
 
     HighResTimer m_timer;
     ZenPlaybackStatusCallback m_statusCb;
